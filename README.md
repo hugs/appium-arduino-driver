@@ -38,8 +38,8 @@ Only 6 commands in the extensive Webdriver spec are available in this driver:
 * New Session (simply pass in the desired capability with a value as described above). This will set up access to the board and initial states.
 * Quit Session. This will reset pins to their initial state.
 * Move To. This is a touch action and expects two parameters, one named "x" and one named "y" corresponding to the relative coordinate you want to move the mouse to.
-* Mouse press: This is a touch action that simulates a left button mouse down movement.
-* Mouse release: This is a touch action that simulates a left button mouse up movement.
+* Touch press: This is a touch action that simulates a left button mouse down movement.
+* Touch release: This is a touch action that simulates a left button mouse up movement.
 * Wait: This is command run locally on the Arduino. It expects one integer parameter named "ms", representing the number of milliseconds to wait.
 
 ## Sample projects
