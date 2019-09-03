@@ -1,20 +1,20 @@
 {
-  "name": "appium-raspi-driver",
-  "description": "Appium driver for Raspberry PI GPIO",
+  "name": "appium-arduino-driver",
+  "description": "Appium driver for Arduino Micro",
   "keywords": [
     "appium",
     "iot",
-    "raspberrypi"
+    "arduino"
   ],
   "version": "0.0.1",
   "author": "appium",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/appium/appium-raspi-driver.git"
+    "url": "https://github.com/hugs/appium-arduino-driver.git"
   },
   "bugs": {
-    "url": "https://github.com/appium/appium-raspi-driver/issues"
+    "url": "https://github.com/hugs/appium-arduino-driver/issues"
   },
   "engines": [
     "node"
@@ -31,14 +31,13 @@
     "build/lib"
   ],
   "dependencies": {
-    "@babel/runtime": "^7.0.0",
+    "@babel/runtime": "^7.5.5",
     "appium-base-driver": "^3.0.0",
     "appium-support": "^2.26.1",
     "asyncbox": "^2.3.1",
     "bluebird": "^3.1.1",
     "johnny-five": "^1.1.0",
     "lodash": "^4.17.10",
-    "raspi-io": "^10.0.2",
     "source-map-support": "^0.5.5",
     "uuid": "^3.3.2",
     "yargs": "^13.1.0"

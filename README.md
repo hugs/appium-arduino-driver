@@ -1,10 +1,12 @@
-# Appium Raspberry Pi Driver
+# Appium Arduino Driver
 
-This is an [Appium](https://github.com/appium/appium) driver for the Raspberry PI GPIO header. It is currently not integrated as a first-party driver in the Appium server, but it can be run in standalone mode. For GPIO interaction it relies on [Johnny Five](http://johnny-five.io/) and the [raspi-io](https://github.com/nebrius/raspi-io) IO plugin for it.
+This is an [Appium](https://github.com/appium/appium) driver for the Arduino Micro. It is currently not integrated as a first-party driver in the Appium server, but it can be run in standalone mode. It relies on [Johnny Five](http://johnny-five.io/).
+
+It was designed as a proof-of-concept to show controlling an iPhone running iOS 13 with an Arduino Micro acting as a USB Mouse. (USB Mouse support is new in iOS 13.)
 
 ## Installation
 
-We assume you have a raspi with some version of linux installed which can handle this server and its dependencies. On the raspi, ensure Node.js and NPM are installed, then clone this repo somewhere. Inside the repo, run:
+We assume you have an Arduino Micro with StandardFirmata installed on it. On a computer, ensure Node.js and NPM are installed, then clone this repo somewhere. Inside the repo, run:
 
 ```
 npm install
@@ -12,51 +14,37 @@ npm install
 
 ## Running the server
 
-Since the server requires GPIO access, sudo should be used to start it:
-
 ```
-sudo node .
-```
-
-If you're trying to access the server from outside the raspi somewhere, you might need to update the host so it's accessible from elsewhere on your network, for example:
-
-```
-sudo node . --host raspberrypi.local
+node .
 ```
 
 ## Desired capabilities
 
-Only one capability is supported: `app`. The `app` capability should be a JSON object mapping GPIO pins to element names, pin modes, and initial states. Here's an example `app` value:
+The `app` capability should be a JSON string. Here's an example desired capability JSON object:
 
 ```js
-{
-  pins: {
-    'P1-7': { id: 'A1', mode: 'output', init: 1, },
-    'P1-11': { id: 'A2', mode: 'output', init: 1, },
-    'P1-13': { id: 'A5', mode: 'output', init: 1, },
-    'P1-15': { id: 'A6', mode: 'output', init: 1, },
+  {
+    "automationName": "arduino'",
+    "app": "Angry Birds",
+    "newCommandTimeout": 3600
   }
-}
 ```
 
-With this app structure, if I find element `A1`, and interact with it, I will be interacting with pin `P1-7`. Pin names are the same as [those supported by raspi-io](https://github.com/nebrius/raspi-io/wiki/Pin-Information). Acceptable values for `mode` are `input` and `output`. Acceptable values for `init` are `1` (initial state of high), and `0` (initial state of low).
 
 ## Supported Appium/Webdriver protocol commands
 
-Only 4 commands in the extensive Webdriver spec are available in this driver:
+Only 6 commands in the extensive Webdriver spec are available in this driver:
 
-* New Session (simply pass in the `app` capability with a value as described above). This will set up access to the board and set the pin modes and initial states.
+* New Session (simply pass in the desired capability with a value as described above). This will set up access to the board and initial states.
 * Quit Session. This will reset pins to their initial state.
-* Find Element. Only finding single elements by ID is supported. How do you know what ID to use? You specify it in the `app` capability mapping! Example: `driver.findElementById("A1")`.
-* Send Keys to Element. There are only two accepted values for this command: the strings `"0"` and `"1"`. `"0"` indicates that the pin should be set to low, whereas `"1"` indicates it should be set to high. Example: `element.sendKeys("0")`.
+* Move To. This is a touch action and expects two parameters, one named "x" and one named "y" corresponding to the relative coordinate you want to move the mouse to.
+* Mouse press: This is a touch action that simulates a left button mouse down movement.
+* Mouse release: This is a touch action that simulates a left button mouse up movement.
+* Wait: This is command run locally on the Arduino. It expects one integer parameter named "ms", representing the number of milliseconds to wait.
 
 ## Sample projects
 
-Examples of this project in use:
+[@hugs] AppiumConf 2019 demo
 
-* [@jlipps](https://github.com/jlipps)'s [AppiumConf 2019 demo](https://github.com/jlipps/appiumconf2019), which uses this driver to automate a homebrew drum machine built with a Circuit Playground.
+This project is a fork of [@jlipps](https://github.com/jlipps)'s [AppiumConf 2019 demo](https://github.com/jlipps/appiumconf2019), which uses a Raspberry Pi to automate a homebrew drum machine built with a Circuit Playground.
 
-## TODO
-
-* There's quite a robust API available with Johnny Five. We could support more element types than just pins, for example LEDs, etc...
-* We could automate other aspects of the Raspberry Pi beyond the GPIO header. Could even expose a full-on shell execution command (though it would be obtuse to use Appium for this rather than say `ssh` in most contexts).
